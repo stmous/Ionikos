@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <script>
+    if (location.protocol === 'http:' && !/^(localhost|127\.0\.0\.1)$/i.test(location.hostname)) {
+      location.replace('https://' + location.host + location.pathname + location.search + location.hash);
+    }
+  </script>
+  <title>Ionikos N.F H.C — Welcome</title>
+  <meta name="description" content="Official site of Ionikos N.F Handball Club" />
+  <meta name="referrer" content="no-referrer" />
+  <link rel="icon" href="assets/img/logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800">
+  <header class="bg-white/80 backdrop-blur sticky top-0 z-40 border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a class="flex items-center gap-3" href="index.html">
+        <img src="assets/img/logo.png" alt="Ionikos N.F H.C logo" class="h-10 w-10 rounded-full ring-1 ring-slate-200 object-cover" />
+        <span class="font-semibold tracking-tight">Ionikos N.F H.C</span>
+      </a>
+      <nav class="flex items-center gap-6 text-sm">
+        <a class="hover:text-blue-700" href="index.html">Home</a>
+        <a class="hover:text-blue-700" href="schedule.html">Schedule</a>
+        <a class="hover:text-blue-700" href="halls.html">Halls</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-10">
+    <section class="grid md:grid-cols-2 gap-8 items-center">
+      <div>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">Welcome to Ionikos N.F Handball Club</h1>
+        <p class="mt-4 text-slate-600">Stay up to date with fixtures, results, and venues. Explore the schedule for upcoming matches, check past game results, and find details about the halls we play in.</p>
+        <div class="mt-6 flex gap-3">
+          <a href="schedule.html" class="inline-flex items-center gap-2 bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-800">View Schedule</a>
+          <a href="halls.html" class="inline-flex items-center gap-2 border border-slate-300 text-slate-800 px-4 py-2 rounded-md hover:bg-slate-100">View Halls</a>
+        </div>
+      </div>
+      <div class="flex justify-center md:justify-end">
+        <img src="assets/img/logo.png" alt="Ionikos N.F H.C logo large" class="w-56 h-56 rounded-2xl object-cover ring-1 ring-slate-200 shadow" />
+      </div>
+    </section>
+
+    <section class="mt-12">
+      <h2 class="text-xl font-semibold">Next Game</h2>
+      <div id="home-next-game" class="mt-4"></div>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 py-6 text-sm text-slate-500">
+    <div class="max-w-6xl mx-auto px-4">© <span id="year"></span> Ionikos N.F H.C</div>
+  </footer>
+
+  <script type="module">
+    import { fetchSchedule, findNextGame, renderGameCard } from './assets/js/schedule.js';
+    document.getElementById('year').textContent = new Date().getFullYear();
+    (async () => {
+      try {
+        const data = await fetchSchedule();
+        const next = findNextGame(data);
+        const container = document.getElementById('home-next-game');
+        if (next) {
+          container.appendChild(renderGameCard(next, { accent: true }));
+        } else {
+          container.innerHTML = '<div class="text-slate-600">No upcoming games.</div>';
+        }
+      } catch (e) {
+        console.error(e);
+        document.getElementById('home-next-game').innerHTML = '<div class="text-red-600">Failed to load schedule.</div>';
+      }
+    })();
+  </script>
+</body>
+</html>

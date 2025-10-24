@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <script>
+    if (location.protocol === 'http:' && !/^(localhost|127\.0\.0\.1)$/i.test(location.hostname)) {
+      location.replace('https://' + location.host + location.pathname + location.search + location.hash);
+    }
+  </script>
+  <title>Ionikos N.F H.C — Halls</title>
+  <meta name="referrer" content="no-referrer" />
+  <link rel="icon" href="assets/img/logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800">
+  <header class="bg-white/80 backdrop-blur sticky top-0 z-40 border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a class="flex items-center gap-3" href="index.html">
+        <img src="assets/img/logo.png" alt="Ionikos N.F H.C logo" class="h-10 w-10 rounded-full ring-1 ring-slate-200 object-cover" />
+        <span class="font-semibold tracking-tight">Ionikos N.F H.C</span>
+      </a>
+      <nav class="flex items-center gap-6 text-sm">
+        <a class="hover:text-blue-700" href="index.html">Home</a>
+        <a class="hover:text-blue-700" href="schedule.html">Schedule</a>
+        <a class="text-blue-700 font-medium" href="halls.html">Halls</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold tracking-tight">Halls</h1>
+
+    <section class="mt-8">
+      <div id="halls-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 py-6 text-sm text-slate-500">
+    <div class="max-w-6xl mx-auto px-4">© <span id="year"></span> Ionikos N.F H.C</div>
+  </footer>
+
+  <script type="module">
+    import { fetchHalls, renderHallCard } from './assets/js/halls.js';
+    document.getElementById('year').textContent = new Date().getFullYear();
+    (async () => {
+      try {
+        const halls = await fetchHalls();
+        const container = document.getElementById('halls-list');
+        if (halls.length) halls.forEach(h => container.appendChild(renderHallCard(h)));
+        else container.innerHTML = '<div class="text-slate-600">No halls available.</div>';
+      } catch (e) {
+        console.error(e);
+        document.getElementById('halls-list').innerHTML = '<div class="text-red-600">Failed to load halls.</div>';
+      }
+    })();
+  </script>
+</body>
+</html>
